@@ -1,0 +1,13 @@
+version: "3.8"
+services:
+
+  vaultvarden:
+    image: vaultwarden/server:latest
+    ports:
+      - "443:80"
+    volumes:
+      - /ssl/keys/:/ssl/
+      - /vw-data/:/data/
+    restart: always
+    environment:
+      ROCKET_TLS: '{certs="/ssl/bitwarden.pem",key="/ssl/bitwarden.key"}'
