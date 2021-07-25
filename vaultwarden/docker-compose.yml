@@ -8,6 +8,6 @@ services:
     volumes:
       - ./ssl/keys/:/ssl/
       - ./vw-data/:/data/
-    restart: always
+        #    restart: always
       #environment:
       #      ROCKET_TLS: '{certs="/ssl/bitwarden.pem",key="/ssl/bitwarden.key"}'
