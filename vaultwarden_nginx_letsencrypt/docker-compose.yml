@@ -1,0 +1,48 @@
+version: '3.8'
+
+networks:
+  net_home:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.99.0/24 
+
+
+services: 
+ 
+  nginx-proxy: 
+    image: jwilder/nginx-proxy 
+    ports: 
+      - "80:80" 
+      - "443:443" 
+    volumes: 
+      - ./data/nginx/certs:/etc/nginx/certs 
+      - ./data/nginx/vhost.d:/etc/nginx/vhost.d  
+      - ./data/nginx/html:/usr/share/nginx/html    
+      - /var/run/docker.sock:/tmp/docker.sock:ro 
+    networks:  
+      - net_home 
+ 
+  bitwarden: 
+    image: vaultwarden/server:latest 
+    volumes: 
+      - ./vw-data/:/data/ 
+    environment: 
+      - VIRTUAL_HOST=bitwarden.itdog.ru 
+      - VIRTUAL_PORT=80 
+      - LETSENCRYPT_HOST=bitwarden.itdog.ru 
+      - LETSENCRYPT_EMAIL=hwts@mail.ru 
+    networks: 
+      - net_home 
+ 
+  nginx-proxy-letsencrypt: 
+    image: jrcs/letsencrypt-nginx-proxy-companion 
+    volumes: 
+      - /var/run/docker.sock:/var/run/docker.sock:ro 
+    volumes_from: 
+      -  nginx-proxy     
+    environment: 
+      - DEFAULT_EMAIL=hwts@mail.ru 
+    networks: 
+      - net_home 
+
