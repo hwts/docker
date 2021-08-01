@@ -62,7 +62,6 @@ services:
       - net_home
 
   rocketchat:
-    # Image tag (replace with yours)
     image: rocket.chat:3.16.3
     command: >
       bash -c
