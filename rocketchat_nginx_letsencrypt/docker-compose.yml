@@ -1,11 +1,5 @@
 version: '3.8'
 
-networks:
-  default:
-    net1:
-
-
-
 services: 
  
   mongo:
@@ -65,3 +59,6 @@ volumes:
   ocketchat-mongo:
   rocketchat-mongo-dump:
 
+networks:
+  default:
+    net1:
