@@ -1,41 +1,13 @@
 version: '3.8'
 
 networks:
-  net_home:
-    driver: bridge
-    ipam:
-      config:
-        - subnet: 192.168.99.0/24 
+  default:
+    net1:
+
 
 
 services: 
  
-  nginx-proxy: 
-    image: jwilder/nginx-proxy 
-    ports: 
-      - "80:80" 
-      - "443:443" 
-    volumes: 
-      - ./data/nginx/certs:/etc/nginx/certs 
-      - ./data/nginx/vhost.d:/etc/nginx/vhost.d  
-      - ./data/nginx/html:/usr/share/nginx/html    
-      - /var/run/docker.sock:/tmp/docker.sock:ro 
-    networks:  
-      - net_home 
- 
-
-  nginx-proxy-letsencrypt: 
-    image: jrcs/letsencrypt-nginx-proxy-companion 
-    volumes: 
-      - /var/run/docker.sock:/var/run/docker.sock:ro 
-    volumes_from: 
-      -  nginx-proxy     
-    environment: 
-      - DEFAULT_EMAIL=hwts@mail.ru 
-    networks: 
-      - net_home 
-
-
   mongo:
     image: mongo:4.0
     command: mongod --smallfiles --oplogSize 128 --replSet rs0 --storageEngine=mmapv1
@@ -43,8 +15,7 @@ services:
      - rocketchat-mongo:/data/db
      - rocketchat-mongo-dump:/dump
     restart: unless-stopped
-    networks:
-      - net_home
+
 
   mongo-init-replica:
     image: mongo:4.0
@@ -61,8 +32,6 @@ services:
         done; (exit $$s)"
     depends_on:
       - mongo
-    networks:
-      - net_home
 
   rocketchat:
     # Image tag (replace with yours)
@@ -90,7 +59,9 @@ services:
       LETSENCRYPT_EMAIL: hwts@mail.ru 
     depends_on:
       - mongo
-    networks: 
-      - net_home 
 
+volumes: 
+  rocketchat-uploads:
+  ocketchat-mongo:
+  rocketchat-mongo-dump:
 
